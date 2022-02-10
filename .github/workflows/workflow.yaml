@@ -6,10 +6,11 @@ on:
       github_sha:
         required: true
         type: string
+      domain_owner:
+        required: true
+        type: string
     secrets:
       repo_token:
-        required: true
-      domain_owner:
         required: true
 
 jobs:
@@ -39,7 +40,7 @@ jobs:
 
       - name: Build
         run: |
-          aws codeartifact get-authorization-token --domain pypi-springlabs --domain-owner ${{ secrets.domain_owner }} --query authorizationToken --output text --debug
+          aws codeartifact get-authorization-token --domain pypi-springlabs --domain-owner ${{ inputs.domain_owner }} --query authorizationToken --output text --debug
           make pypi-generate
           ./infrastructure/tools/tag_generation_gh.sh
           make pypi-push
